@@ -40,7 +40,7 @@ function App() {
         userObj={userObj}
       />) : "Initializing..."}
       <footer style ={{textAlign:"center", margin: '30px 0'}}>
-        &copy; YunHo made this for practice. Thanks to Nomad Coder. {new Date().getFullYear()}
+        &copy; YunHo made this for practice. haha Thanks to Nomad Coder. {new Date().getFullYear()}
       </footer>    
     </>
   )
