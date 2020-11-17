@@ -1,27 +1,47 @@
-import { Router } from "react-router-dom";
 import React, { useState, useEffect} from 'react';
 import AppRouter from "components/Router";
-import fbase from "fbase";
 import {authService} from 'fbase';
 
 
 function App() {
   const [init, setInit] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userObj, setUserObj] = useState(null);
+ 
+  
   useEffect(() => {
     authService.onAuthStateChanged((user) => {
       if(user){
-        setIsLoggedIn(true);
-      } else{
-        setIsLoggedIn(false);
+        setUserObj({
+          displayName: user.displayName,
+          uid: user.uid,
+          updateProfile: (args) => user.updateProfile(args)
+        });
+      } else {
+        setUserObj(null);
       }
       setInit(true)
     });
   }, [])
+  
+  const refreshUser = () => {
+    const user = authService.currentUser;
+    setUserObj( {
+      displayName:user.displayName,
+      uid: user.uid,
+      updateProfile: (args) => user.updateProfile(args)});
+  }
+  
   return (
     <>
-    {init ? <AppRouter isLoggedIn ={isLoggedIn}/> : "Initializing..."}
-    <footer>&copy; Nwitter {new Date().getFullYear()}</footer>
+    {init ? (
+      <AppRouter 
+        refreshUser = {refreshUser} 
+        isLoggedIn ={Boolean(userObj)} 
+        userObj={userObj}
+      />) : "Initializing..."}
+      <footer style ={{textAlign:"center", margin: '30px 0'}}>
+        &copy; YunHo made this for practice. Thanks to Nomad Coder. {new Date().getFullYear()}
+      </footer>    
     </>
   )
   
